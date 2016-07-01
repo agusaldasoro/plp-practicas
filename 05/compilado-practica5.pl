@@ -155,6 +155,48 @@ arbolConInorder(bin(I,R,D),L):- append(LI,[R|LD],L), arbolConInorder(I,LI), arbo
 
 % -------------- GENERATE AND TEST ------------------
 % Ejercicio 14
+coprimos(X, Y) :- desde(2, X), between(2, X, Y), G is gcd(X, Y), G = 1.
+
+% Ejercicio 15
+cuadradoSemiLatino(N, M) :- desde(0, SUMA), matriz(N, SUMA, M), sumRows(SUMA, M).
+
+sumRows(_, []).
+sumRows(SUM, [R | RS]) :- suma_lista(R, SUM), sumRows(SUM, RS).
+
+suma_lista([], 0).
+suma_lista([X | XS], SUM) :- suma_lista(XS, M), SUM is M + X.
+
+matriz(N, SUMA, M) :- length(M, N), fillRows(N, SUMA, M).
+
+fillRows(_, _, []).
+fillRows(N, SUMA, [R | RS]) :- length(R, N), fillRow(SUMA, R), fillRows(N, SUMA, RS).
+
+fillRow(SUMA, [X]) :- between(0, SUMA, X).
+fillRow(SUMA, [X | XS]) :- between(0, SUMA, X), fillRow(SUMA, XS).
+
+% Ejercicio 17
+% i
+esTriangulo(tri(A, B, C)) :- esCompatible(A, B, C), esCompatible(B, A, C), esCompatible(C, A, B).
+
+esCompatible(A, B, C) :- A > 0, A < B + C, A >= B - C.
+
+% ii
+perimetro(tri(A, B, C), P) :- definido(tri(A, B, C)), esTriangulo(tri(A, B, C)), P is A + B + C.
+perimetro(tri(A, B, C), P) :- var(P), nodefinido(tri(A, B, C)), desde(1, P), perimetro(tri(A, B, C), P).
+perimetro(tri(A, B, C), P) :- nonvar(P), nodefinido(tri(A, B, C)), between(1, P, A), between(1, P, B), between(1, P, C), P is A + B + C, esTriangulo(tri(A, B, C)).
+
+definido(tri(A, B, C)) :- nonvar(A), nonvar(B), nonvar(C).
+nodefinido(tri(A, _, _)) :- var(A). % No importan parcialmente instanciados
+
+% iii
+triangulo(T) :- perimetro(tri(A, B, C), P), T = tri(A, B, C).
+
+% Ejercicio 20
+corteMasParejo(L, L1, L2) :- append(L1, L2, L), not(existeCorteMasParejo(L, L1, L2)).
+
+existeCorteMasParejo(L, L1, L2) :- append(L3, L4, L), diffSums(L1, L2, D), diffSums(L3, L4, D2), D2 < D.
+
+diffSums(L1, L2, N) :- sum_list(L1, N1), sum_list(L2, N2), D is N2 - N1, N is abs(D).
 
 % -------------- Integradores ----------------
 % Ejercicio 22
